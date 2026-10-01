@@ -1,33 +1,230 @@
-import React from 'react';
-import Hero from './components/Hero';
-import TechStack from './components/TechStack';
-import PixDonation from './components/PixDonation';
+import { useEffect, useRef, useState } from "react";
+import {
+  Github,
+  Linkedin,
+  Mail,
+  ArrowLeft,
+  Home,
+  FolderGit2,
+  Cpu,
+  Coffee,
+} from "lucide-react";
+import "./App.css";
+import qrcodePix from "./assets/qrcode-pix.png";
+import { resolveDirectory, resolveFile } from "./utils/terminalCommands";
+import {
+  About,
+  Contact,
+  Pix,
+  Projects,
+  Stack,
+} from "./components/TerminalViews";
 
 function App() {
-  return (
-    <div className="relative min-h-screen bg-zinc-900 text-zinc-100 flex flex-col items-center justify-center p-4 font-sans selection:bg-cyan-500 selection:text-zinc-900 overflow-hidden">
-      {}
-      <div 
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: `url('https://camo.githubusercontent.com/c52ebcbb7aa90795722a25ebade384495fc3e1aae34ae22e6ec5b289e13969be/68747470733a2f2f692e696d6775722e636f6d2f6731576c5856412e676966')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-        }}
-      >
-        <div className="absolute inset-0 bg-zinc-900/90 backdrop-blur-sm"></div>
-      </div>
+  const [activeSection, setActiveSection] = useState("about");
+  const [command, setCommand] = useState("");
+  const [screenCleared, setScreenCleared] = useState(false);
+  const [commandMessage, setCommandMessage] = useState("");
+  const [commandOutput, setCommandOutput] = useState(null);
+  const [lastCommand, setLastCommand] = useState("whoami");
+  const [profileOnly, setProfileOnly] = useState(false);
+  const [navigationHistory, setNavigationHistory] = useState([]);
+  const [copied, setCopied] = useState(false);
+  const inputRef = useRef(null);
+  const pixKey =
+    "00020126580014BR.GOV.BCB.PIX01364a6f60cf-51d9-4d47-a26a-de91ee8ccdf55204000053039865802BR5901N6001C62070503***6304A262";
 
-      <main className="relative z-10 max-w-2xl w-full space-y-12">
-        <Hero />
-        <TechStack />
-        <PixDonation />
+  useEffect(() => inputRef.current?.focus(), [activeSection]);
+
+  const navigate = (section) => {
+    if (section !== activeSection) {
+      setNavigationHistory((history) => [...history, activeSection]);
+    }
+    setActiveSection(section);
+    setCommand("");
+    setScreenCleared(false);
+    setCommandMessage("");
+    setCommandOutput(null);
+    setLastCommand(section === "about" ? "whoami" : `cat ${section}`);
+    setProfileOnly(false);
+  };
+  const goBack = () => {
+    const previousSection = navigationHistory[navigationHistory.length - 1];
+    if (!previousSection) return;
+    setNavigationHistory((history) => history.slice(0, -1));
+    setActiveSection(previousSection);
+    setCommand("");
+    setScreenCleared(false);
+    setCommandMessage("");
+    setCommandOutput(null);
+    setLastCommand(previousSection === "about" ? "whoami" : `cat ${previousSection}`);
+    setProfileOnly(false);
+  };
+  const runCommand = (event) => {
+    event.preventDefault();
+    const value = command.trim().toLowerCase();
+    const [name, ...argumentsList] = value.split(/\s+/);
+    const argument = argumentsList.join(" ");
+    const shortcutTarget = value.match(/^[1-4]$/)
+      ? ["projects", "stack", "contact", "pix"][Number(value) - 1]
+      : null;
+
+    if (!value) return;
+    if (name === "clear") {
+      setScreenCleared(true);
+      setCommand("");
+      setCommandMessage("");
+      setCommandOutput(null);
+      return;
+    }
+    setScreenCleared(false);
+    setCommandMessage("");
+    setCommandOutput(null);
+    if (name === "whoami") {
+      setActiveSection("about");
+      setLastCommand("whoami");
+      setProfileOnly(true);
+      setCommand("");
+      return;
+    }
+    if (name === "ls") {
+      setLastCommand("ls");
+      setCommandOutput("projects/    stack/    contact/    pix/");
+      setCommand("");
+      return;
+    }
+    if (name === "help") return navigate("about");
+    if (shortcutTarget) return navigate(shortcutTarget);
+    if (name === "cd") {
+      const target = resolveDirectory(argument || "~");
+      if (target) return navigate(target);
+      setCommandMessage(`cd: diretório não encontrado: ${argument || ""}`);
+      setCommand("");
+      return;
+    }
+    if (name === "cat") {
+      const target = resolveFile(argument);
+      if (target) return navigate(target);
+      setCommandMessage(`cat: arquivo não encontrado: ${argument || ""}`);
+      setCommand("");
+      return;
+    }
+    setCommandMessage(`${name}: comando não encontrado`);
+    setCommand("");
+  };
+  const copyPix = async () => {
+    await navigator.clipboard.writeText(pixKey);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 2000);
+  };
+  return (
+    <div className="terminal-app">
+      <header className="topbar">
+        <div className="topbar-inner">
+          <div className="brand-line">
+            <span className="prompt-label">
+              <b>guest@dev</b>
+              <em>:</em>
+              <strong>~/portfolio</strong>
+            </span>
+          </div>
+          <nav className="mouse-nav" aria-label="Navegação do portfólio">
+            <button type="button" onClick={goBack} disabled={!navigationHistory.length} title="Voltar">
+              <ArrowLeft size={15} />
+            </button>
+            <button type="button" onClick={() => navigate("about")} title="Início">
+              <Home size={15} />
+            </button>
+            <button type="button" onClick={() => navigate("projects")} title="Projetos">
+              <FolderGit2 size={15} />
+            </button>
+            <button type="button" onClick={() => navigate("stack")} title="Tecnologias">
+              <Cpu size={15} />
+            </button>
+            <button type="button" onClick={() => navigate("contact")} title="Contato">
+              <Mail size={15} />
+            </button>
+            <button type="button" onClick={() => navigate("pix")} title="Apoie o trabalho">
+              <Coffee size={15} />
+            </button>
+          </nav>
+        </div>
+      </header>
+      <main className="page-shell">
+        <section className="terminal-window">
+          <div className="window-bar">
+            <div className="window-title">
+              <span className="traffic-lights">
+                <i />
+                <i />
+                <i />
+              </span>
+            </div>
+          </div>
+          <div className="terminal-body">
+            <div className="terminal-content">
+              {!screenCleared && (
+                <>
+                  <div className="command-line">
+                    <span>guest@terminal</span>
+                    <b>:</b>
+                    <strong>~</strong>
+                    <i>$</i>
+                    <span className="typed">
+                      {lastCommand}
+                    </span>
+                  </div>
+                  {commandOutput ? (
+                    <p className="terminal-output">{commandOutput}</p>
+                  ) : (
+                    <>
+                      {activeSection === "about" && (
+                        <About onNavigate={navigate} profileOnly={profileOnly} />
+                      )}
+                      {activeSection === "projects" && <Projects />}
+                      {activeSection === "stack" && <Stack />}
+                      {activeSection === "contact" && <Contact />}
+                      {activeSection === "pix" && (
+                        <Pix
+                          pixKey={pixKey}
+                          copied={copied}
+                          onCopy={copyPix}
+                          image={qrcodePix}
+                        />
+                      )}
+                    </>
+                  )}
+                  {commandMessage && (
+                    <p className="terminal-message">{commandMessage}</p>
+                  )}
+                </>
+              )}
+              <form className="command-line input-line" onSubmit={runCommand}>
+                <span>guest@terminal</span>
+                <b>:</b>
+                <strong>~</strong>
+                <i>$</i>
+                <input
+                  ref={inputRef}
+                  value={command}
+                  onChange={(event) => setCommand(event.target.value)}
+                  aria-label="Comando do terminal"
+                  autoComplete="off"
+                  spellCheck="false"
+                />
+              </form>
+            </div>
+          </div>
+        </section>
       </main>
-      
-      <footer className="relative z-10 mt-20 text-zinc-500 text-sm">
-        <p>© {new Date().getFullYear()} Lip. Built with React & Tailwind.</p>
-      </footer>
+      <div className="social-bar">
+        <a href="https://github.com/FelipeGFA" target="_blank" rel="noreferrer">
+          <Github size={13} /> gh/dev
+        </a>
+        <a href="https://www.linkedin.com/in/felipegfa" target="_blank" rel="noreferrer">
+          <Linkedin size={13} /> in/dev
+        </a>
+      </div>
     </div>
   );
 }

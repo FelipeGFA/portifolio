@@ -1,16 +1,41 @@
-# React + Vite
+ # Portfólio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ Portfólio pessoal do Felipe Avila, desenvolvido com uma interface inspirada em terminal Unix.
 
-Currently, two official plugins are available:
+ ## Tecnologias
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+ - React
+ - Vite
+ - JavaScript
+ - CSS
+ - Lucide React
 
-## React Compiler
+ ## Executar localmente
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+ ```bash
+ npm install
+ npm run dev
+ ```
 
-## Expanding the ESLint configuration
+ Para gerar a versão de produção:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+ ```bash
+ npm run build
+ ```
+
+ ## Navegação
+
+ É possível navegar pelos botões da interface ou pelo terminal usando comandos como:
+
+ ```text
+ whoami
+ ls
+ cd projects
+ cat projects.git
+ clear
+ ```
+
+ ## Links
+
+ - GitHub: https://github.com/FelipeGFA
+ - LinkedIn: https://www.linkedin.com/in/felipegfa
