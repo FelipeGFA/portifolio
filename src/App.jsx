@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   Github,
   Linkedin,
@@ -35,8 +35,6 @@ function App() {
   const { language, toggleLanguage, t } = useTranslation();
   const pixKey =
     "00020126580014BR.GOV.BCB.PIX01364a6f60cf-51d9-4d47-a26a-de91ee8ccdf55204000053039865802BR5901N6001C62070503***6304A262";
-
-  useEffect(() => inputRef.current?.focus(), [activeSection]);
 
   const navigate = (section) => {
     if (section !== activeSection) {
