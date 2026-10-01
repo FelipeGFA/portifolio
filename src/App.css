@@ -86,6 +86,14 @@
     opacity: .35;
 }
 
+.mouse-nav .language-switch {
+    width: auto;
+    min-width: 32px;
+    padding: 0 7px;
+    color: var(--green);
+    font: 600 10px 'JetBrains Mono', monospace;
+}
+
 .traffic-lights {
     display: flex;
     gap: 6px;

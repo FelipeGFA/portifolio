@@ -1,4 +1,5 @@
 import { Check, Copy, ExternalLink, Github, Linkedin, Mail } from "lucide-react";
+import { useTranslation } from "../i18n/LanguageContext";
 
 export function PromptText({ children }) {
   return (
@@ -13,25 +14,24 @@ export function PromptText({ children }) {
 }
 
 export function About({ onNavigate, profileOnly = false }) {
+  const { t } = useTranslation();
   const items = [
-    ["projects", "projects.git", "repositórios e projetos"],
-    ["stack", "stack.sys", "tecnologias e ferramentas"],
-    ["contact", "contact.sh", "canais de contato & email"],
-    ["pix", "support.pix", "apoie este trabalho"],
+    ["projects", "projects.git", t("actions.projects")],
+    ["stack", "stack.sys", t("actions.stack")],
+    ["contact", "contact.sh", t("actions.contact")],
+    ["pix", "support.pix", t("actions.pix")],
   ];
 
   return (
     <div className="section-content">
       <div className="indent hero-copy">
-        <h1>Felipe Avila</h1>
-        <h2>Lip</h2>
-        <p>
-          Desenvolvedor full-stack.
-        </p>
+        <h1>{t("profile.name")}</h1>
+        <h2>{t("profile.role")}</h2>
+        <p>{t("profile.description")}</p>
       </div>
       {!profileOnly && (
         <>
-          <PromptText>ls -l actions</PromptText>
+          <PromptText>{t("terminal.actions")}</PromptText>
           <div className="action-list">
             {items.map(([section, file, description], index) => (
               <button key={section} onClick={() => onNavigate(section)}>
@@ -49,42 +49,43 @@ export function About({ onNavigate, profileOnly = false }) {
 }
 
 export function Projects() {
+  const { t } = useTranslation();
   const projects = [
     [
-      "Este portifolio",
+      t("projects.portfolioName"),
       "https://github.com/FelipeGFA/portifolio",
-      "Portfólio pessoal em React e Vite, apresentado como um terminal interativo.",
+      t("projects.portfolio"),
     ],
     [
       "Online Launchpad",
       "https://github.com/FelipeGFA/Launchpad",
-      "Launchpad musical moderno com pads interativos, visualizador, efeitos de luz e sequenciador.",
+      t("projects.launchpad"),
     ],
     [
       "Hagitori Desktop",
       "https://github.com/hagitori/hagitori-desktop",
-      "Downloader de mangás multiplataforma com backend Rust, Tauri e sistema extensível de scrapers.",
+      t("projects.hagitori"),
     ],
     [
-      "Roterizador Urbano",
+      t("projects.routerName"),
       "https://github.com/FelipeGFA/Roteirizador-Urbano",
-      "Aplicação Flask que otimiza rotas de serviço a partir de planilhas, com mapas interativos e exportação de relatórios.",
+      t("projects.router"),
     ],
     [
       "Kahoot Bot",
       "https://github.com/FelipeGFA/Kahoot-Bot",
-      "Script Python que usa Playwright e IA para analisar perguntas e selecionar respostas no Kahoot.",
+      t("projects.kahoot"),
     ],
     [
       "I3 Dot Files",
       "https://github.com/FelipeGFA/I3-DOT-FILES",
-      "Configurações instaláveis para um ambiente Arch Linux com i3, Polybar, Kitty, Rofi e scripts próprios.",
+      t("projects.dotfiles"),
     ],
   ];
 
   return (
     <div className="section-content">
-      <PromptText>cat projects.git</PromptText>
+      <PromptText>{t("projects.command")}</PromptText>
       <div className="project-list indent">
         {projects.map(([name, url, description], index) => (
           <article key={name}>
@@ -94,7 +95,7 @@ export function Projects() {
             </div>
             <p>{description}</p>
             <a href={url} target="_blank" rel="noreferrer">
-              ver repositório <ExternalLink size={13} />
+              {t("projects.repository")} <ExternalLink size={13} />
             </a>
           </article>
         ))}
@@ -104,6 +105,7 @@ export function Projects() {
 }
 
 export function Stack() {
+  const { t } = useTranslation();
   const items = [
     "React",
     "JavaScript",
@@ -119,13 +121,13 @@ export function Stack() {
 
   return (
     <div className="section-content">
-      <PromptText>cat stack.sys</PromptText>
+      <PromptText>{t("stack.command")}</PromptText>
       <div className="stack-grid indent">
         {items.map((item, index) => (
           <div key={item}>
             <span>0{index + 1}</span>
             <strong>{item}</strong>
-            <small>● ready</small>
+            <small>{t("stack.ready")}</small>
           </div>
         ))}
       </div>
@@ -134,15 +136,12 @@ export function Stack() {
 }
 
 export function Contact() {
+  const { t } = useTranslation();
   return (
     <div className="section-content">
-      <PromptText>cat contact.log</PromptText>
+      <PromptText>{t("contact.command")}</PromptText>
       <div className="contact-block indent">
-        <h2>Vamos conversar?</h2>
-        <p>
-          Tenho interesse em produtos bem pensados, sistemas claros e desafios
-          que pedem curiosidade.
-        </p>
+        <h2>{t("contact.title")}</h2>
         <a href="mailto:felipegabriel.avila6@gmail.com">
           <Mail size={15} /> felipegabriel.avila6@gmail.com
         </a>
@@ -160,16 +159,17 @@ export function Contact() {
 }
 
 export function Pix({ pixKey, copied, onCopy, image }) {
+  const { t } = useTranslation();
   return (
     <div className="section-content">
-      <PromptText>cat support.pix</PromptText>
+      <PromptText>{t("pix.command")}</PromptText>
       <div className="pix-block indent">
         <div>
-          <h2>Gostou do trabalho?</h2>
-          <p>Um café ajuda a manter os próximos projetos em movimento.</p>
+          <h2>{t("pix.title")}</h2>
+          <p>{t("pix.description")}</p>
           <button onClick={onCopy} className="copy-button">
             {copied ? <Check size={15} /> : <Copy size={15} />}
-            {copied ? "código copiado" : "copiar chave Pix"}
+            {copied ? t("pix.copied") : t("pix.copy")}
           </button>
         </div>
         <img src={image} alt="QR Code Pix" />

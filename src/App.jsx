@@ -12,6 +12,7 @@ import {
 import "./App.css";
 import qrcodePix from "./assets/qrcode-pix.png";
 import { resolveDirectory, resolveFile } from "./utils/terminalCommands";
+import { useTranslation } from "./i18n/LanguageContext";
 import {
   About,
   Contact,
@@ -31,6 +32,7 @@ function App() {
   const [navigationHistory, setNavigationHistory] = useState([]);
   const [copied, setCopied] = useState(false);
   const inputRef = useRef(null);
+  const { language, toggleLanguage, t } = useTranslation();
   const pixKey =
     "00020126580014BR.GOV.BCB.PIX01364a6f60cf-51d9-4d47-a26a-de91ee8ccdf55204000053039865802BR5901N6001C62070503***6304A262";
 
@@ -89,7 +91,7 @@ function App() {
     }
     if (name === "ls") {
       setLastCommand("ls");
-      setCommandOutput("projects/    stack/    contact/    pix/");
+      setCommandOutput(t("terminal.directories"));
       setCommand("");
       return;
     }
@@ -98,18 +100,20 @@ function App() {
     if (name === "cd") {
       const target = resolveDirectory(argument || "~");
       if (target) return navigate(target);
-      setCommandMessage(`cd: diretório não encontrado: ${argument || ""}`);
+      setCommandMessage(
+        t("terminal.errorDirectory", { value: argument || "" }),
+      );
       setCommand("");
       return;
     }
     if (name === "cat") {
       const target = resolveFile(argument);
       if (target) return navigate(target);
-      setCommandMessage(`cat: arquivo não encontrado: ${argument || ""}`);
+      setCommandMessage(t("terminal.errorFile", { value: argument || "" }));
       setCommand("");
       return;
     }
-    setCommandMessage(`${name}: comando não encontrado`);
+    setCommandMessage(`${name}: ${t("terminal.errorCommand")}`);
     setCommand("");
   };
   const copyPix = async () => {
@@ -128,24 +132,33 @@ function App() {
               <strong>~/portfolio</strong>
             </span>
           </div>
-          <nav className="mouse-nav" aria-label="Navegação do portfólio">
-            <button type="button" onClick={goBack} disabled={!navigationHistory.length} title="Voltar">
+          <nav className="mouse-nav" aria-label={t("navigation.aria")}>
+            <button type="button" onClick={goBack} disabled={!navigationHistory.length} title={t("navigation.back")}>
               <ArrowLeft size={15} />
             </button>
-            <button type="button" onClick={() => navigate("about")} title="Início">
+            <button type="button" onClick={() => navigate("about")} title={t("navigation.home")}>
               <Home size={15} />
             </button>
-            <button type="button" onClick={() => navigate("projects")} title="Projetos">
+            <button type="button" onClick={() => navigate("projects")} title={t("navigation.projects")}>
               <FolderGit2 size={15} />
             </button>
-            <button type="button" onClick={() => navigate("stack")} title="Tecnologias">
+            <button type="button" onClick={() => navigate("stack")} title={t("navigation.stack")}>
               <Cpu size={15} />
             </button>
-            <button type="button" onClick={() => navigate("contact")} title="Contato">
+            <button type="button" onClick={() => navigate("contact")} title={t("navigation.contact")}>
               <Mail size={15} />
             </button>
-            <button type="button" onClick={() => navigate("pix")} title="Apoie o trabalho">
+            <button type="button" onClick={() => navigate("pix")} title={t("navigation.pix")}>
               <Coffee size={15} />
+            </button>
+            <button
+              type="button"
+              className="language-switch"
+              onClick={toggleLanguage}
+              title={t("navigation.language")}
+              aria-label={t("navigation.language")}
+            >
+              {language === "pt" ? "EN" : "PT"}
             </button>
           </nav>
         </div>
@@ -208,7 +221,7 @@ function App() {
                   ref={inputRef}
                   value={command}
                   onChange={(event) => setCommand(event.target.value)}
-                  aria-label="Comando do terminal"
+                  aria-label={t("terminal.inputLabel")}
                   autoComplete="off"
                   spellCheck="false"
                 />
