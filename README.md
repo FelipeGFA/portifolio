@@ -1,41 +1,49 @@
- # Portfólio
+# Portfólio
 
- Portfólio pessoal do Felipe Avila, desenvolvido com uma interface inspirada em terminal Unix.
+Portfólio pessoal de Felipe Avila, desenvolvido com uma interface TUI inspirada em terminal Linux (`bash` + `tmux`), pensado para ser autêntico para devs e intuitivo para qualquer visitante.
 
- ## Tecnologias
+## Tecnologias
 
- - React
- - Vite
- - JavaScript
- - CSS
- - Lucide React
+- React
+- Vite
+- Tailwind CSS v4
+- GSAP (`@gsap/react`, `TextPlugin` e `ScrambleTextPlugin`)
+- Lucide React
 
- ## Executar localmente
+## Executar localmente
 
- ```bash
- npm install
- npm run dev
- ```
+```bash
+npm install
+npm run dev
+```
 
- Para gerar a versão de produção:
+Para gerar a versão de produção:
 
- ```bash
- npm run build
- ```
+```bash
+npm run build
+```
 
- ## Navegação
+## Navegação
 
- É possível navegar pelos botões da interface ou pelo terminal usando comandos como:
+Você pode navegar pelas abas numeradas `[1]`–`[5]`, pelos botões da interface ou pelo terminal interativo usando comandos como:
 
- ```text
- whoami
- ls
- cd projects
- cat projects.git
- clear
- ```
+```text
+ajuda / help
+whoami
+ls
+pwd
+neofetch
+theme [phosphor|gruvbox|tokyonight|catppuccin|mono]
+cd projetos
+cat projects.git
+open github
+open linkedin
+pt / en
+clear
+1 .. 5
+```
 
- ## Links
+## Links
 
- - GitHub: https://github.com/FelipeGFA
- - LinkedIn: https://www.linkedin.com/in/felipegfa
+- GitHub: https://github.com/FelipeGFA
+- LinkedIn: https://www.linkedin.com/in/felipegfa
